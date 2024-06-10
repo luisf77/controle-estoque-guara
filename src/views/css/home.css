@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+}
+
+.header {
+    height: 8em;
+}
+
+.main {
+    background-color: #a0522d;
+    height: 3em;
+    display: flex;
+    align-items: center;
+}
+
+.line-above {
+    background-color: black;
+}
