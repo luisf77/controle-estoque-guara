@@ -43,3 +43,17 @@ body {
 .btn-primary {
     margin: 0.8em 0em 0.5em 1em;
 }
+
+.btn-warning {
+    height: 2em;
+    padding: 0.2em;
+}
+
+.btn-danger {
+    height: 2em;
+    padding: 0.2em;
+}
+
+.table {
+    margin-left: 1em;
+}
