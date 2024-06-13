@@ -45,9 +45,40 @@ class Botina{
     }
 }
 const db_botas = [] //array que irá armazenar os dados 
-let formBotas = document.getElementById('formularioBotas');
-formBotas.addEventListener('submit', cadastrar);
+let formBotas = document.getElementById('formularioBotas'); // variavel que referencia o formulário
+formBotas.addEventListener('submit', cadastrar); 
 
+function mostrarDados(db_botas){
+    /*Dentro dessa função é criado os elementos da tabela, cabeçalhos e linhas da tabela
+     e é feita a leitura dos dados do array de objetos e inseridos dentro da taabela*/
+
+    let tabelaCalcados = document.getElementById('tabelaCalcados');
+
+    tabelaCalcados.innerHTML=''; /*essa linha faz a limpeza de toda tabela para ser atualizada e não gerar 
+    linhas duplicadas quando a função é chamada para atualizar a tabela*/
+
+    let cabecalhos = ['Código ','Categoria ','Tipo de Solado ','Tipo de Couro ','Tamanho ','Quantidade de Pares '];
+    // array com os título, cabeçalhos da tabela
+
+    cabecalhos.forEach((titulo)=>{
+        let th = document.createElement('th');
+        th.textContent= titulo;
+        tabelaCalcados.appendChild(th);
+    });//aqui foi usado o forEach para percorrer o array e ir adicionando os Títulos na tabela
+
+    for(let i=0; i<db_botas.length; i++){
+        /*Nesse for é percorrido o array de objetos, base de dados, e adicionados os 
+        elementos tr e tds na tabela*/
+        let tr = document.createElement('tr')
+        for(let j in db_botas[i]){
+            /* Esse for percorre cada objeto dentro do array */
+            let td = document.createElement('td')
+            td.textContent= db_botas[i][j];
+            tr.appendChild(td)
+        }
+        tabelaCalcados.appendChild(tr)
+    }
+}
 function cadastrar(event){
     event.preventDefault();
     const codigo = document.getElementById('codigo').value;
@@ -58,6 +89,6 @@ function cadastrar(event){
     const quantidade = document.getElementById('quantidade').value;
     const bota = new Botina(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidade);
     db_botas.push(bota);
-    console.log(db_botas);
     event.target.reset();
+    mostrarDados(db_botas);
 }

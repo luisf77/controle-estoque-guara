@@ -13,30 +13,38 @@
         <h2>Cadastro de Calçados</h2>
         <p>
         <label for="codigo">Código:</label>
-        <input type="text" id="codigo" />
+        <input type="text" id="codigo" required/>
         </p>
         <p>
         <label for="categoria">Cadegoria:</label>
-        <input type="text" id="categoria" />
+        <input type="text" id="categoria" required />
         </p>
         <p>
         <label for="tipoSolado">Tipo de Solado:</label>
-        <input type="text" id="tipoSolado" />
+        <input type="text" id="tipoSolado" required />
         </p>
         <p>
             <label for="tipoCouro">Tipo de Couro</label>
-            <input type="text" id="tipoCouro" />
+            <input type="text" id="tipoCouro" required/>
         </p>
         <p>
             <label for="tamanho">Tamanho:</label>
-            <input type="text" id="tamanho" />
+            <input type="text" id="tamanho" required/>
         </p>
         <p>
             <label for="quantidade">Quantida de Pares:</label>
-            <input type="text" id="quantidade">
+            <input type="text" id="quantidade" required />
         </p>
         <button type="submit">Cadastrar</button>
     </form>
+    <table border="1px" id="tabelaCalcados">
+        <th>Código</th>
+        <th>Categoria</th>
+        <th>Tipo de Solado</th>
+        <th>Tipo de Couro</th>
+        <th>Tamanho</th>
+        <th>Quantidade de Pares</th>
+    </table>
     <script src="/src/models/main.js"></script>
 </head>
 <body>
