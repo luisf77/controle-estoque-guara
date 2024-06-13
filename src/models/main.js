@@ -45,8 +45,32 @@ class Botina{
     }
 }
 const db_botas = [] //array que irá armazenar os dados 
-let formBotas = document.getElementById('formularioBotas'); // variavel que referencia o formulário
-formBotas.addEventListener('submit', cadastrar); 
+const formBotas = document.getElementById('formularioBotas'); // variavel que referencia o formulário
+formBotas.addEventListener('submit',cadastrar);
+
+/* função criada para adicionar botões na tabela */
+function addBotoes(i){
+    let botaoEditar = document.createElement('button');
+    let botaoExcluir = document.createElement('button');
+    botaoEditar.id = i;
+    botaoEditar.className='editar';
+    botaoEditar.textContent='Editar';
+
+    botaoExcluir.id = i;
+    botaoExcluir.className = 'excluir';
+    botaoExcluir.textContent = 'Excluir';
+    // neste evente se pega o id do botão ao clicar e chama a função deletarCalcados
+    botaoExcluir.addEventListener('click', function(event){ 
+        let botaoId = event.target.id;
+        // console.log('Excluir o item Id:', buttonId);
+        deletarCalcado(botaoId);
+    })
+
+    let tdBotoes = document.createElement('td');
+    tdBotoes.appendChild(botaoEditar);
+    tdBotoes.appendChild(botaoExcluir);
+    return tdBotoes
+}
 
 function mostrarDados(db_botas){
     /*Dentro dessa função é criado os elementos da tabela, cabeçalhos e linhas da tabela
@@ -76,8 +100,10 @@ function mostrarDados(db_botas){
             td.textContent= db_botas[i][j];
             tr.appendChild(td)
         }
-        tabelaCalcados.appendChild(tr)
+        tr.appendChild(addBotoes(i));
+        tabelaCalcados.appendChild(tr);
     }
+
 }
 function cadastrar(event){
     event.preventDefault();
@@ -89,6 +115,16 @@ function cadastrar(event){
     const quantidade = document.getElementById('quantidade').value;
     const bota = new Botina(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidade);
     db_botas.push(bota);
+    mostrarDados(db_botas);
     event.target.reset();
+}
+
+function editar(){
+
+}
+
+// função que deleta o objeto do array e atualiza a tabela
+function deletarCalcado(i){
+    db_botas.splice(i,1);
     mostrarDados(db_botas);
 }
