@@ -45,25 +45,41 @@ class Botina{
     }
 }
 const db_botas = [] //array que irá armazenar os dados 
+// Carregar dados do localStorage ao iniciar a página
+window.onload = function() {
+    if (localStorage.getItem('db_botas')){
+        const botasDoStorange = JSON.parse(localStorage.getItem('db_botas'));
+        botasDoStorange.forEach(dadosBota =>{
+            const bota = new Botina(
+                dadosBota._codigo,
+                dadosBota._categoria,
+                dadosBota._tipoSolado,
+                dadosBota._tipoCouro,
+                dadosBota._tamanho,
+                dadosBota._quantidadeDePares
+            );
+            db_botas.push(bota)
+        }); 
+    }
+    mostrarDados(db_botas);
+}
 
 const formBotas = document.getElementById('formularioBotas'); // variavel que referencia o formulário
 formBotas.addEventListener('submit',cadastrar);
 
-/* função criada para adicionar botões na tabela */
 function addBotoes(i){
     let botaoEditar = document.createElement('button');
     let botaoExcluir = document.createElement('button');
     botaoEditar.id = i;
-    botaoEditar.className='editar';
+    botaoEditar.className='btn btn-warning';
     botaoEditar.textContent='Editar';
     botaoEditar.addEventListener('click', function(event){ 
         let botaoId = event.target.id;
         editarCalcado(botaoId);
     })// neste evente se pega o id do botão ao clicar e chama a função editarCalcados
 
-
     botaoExcluir.id = i;
-    botaoExcluir.className = 'excluir';
+    botaoExcluir.className = 'btn btn-danger';
     botaoExcluir.textContent = 'Excluir';
     // neste evente se pega o id do botão ao clicar e chama a função deletarCalcados
     botaoExcluir.addEventListener('click', function(event){ 
@@ -83,52 +99,72 @@ function mostrarDados(db_botas){
      e é feita a leitura dos dados do array de objetos e inseridos dentro da taabela*/
 
     let tabelaCalcados = document.getElementById('tabelaCalcados');
-
     tabelaCalcados.innerHTML=''; 
     /*essa linha faz a limpeza de toda tabela para ser atualizada e não gerar 
     linhas duplicadas quando a função é chamada para atualizar a tabela*/
 
-    let cabecalhos = ['Código ','Categoria ','Tipo de Solado ','Tipo de Couro ','Tamanho ','Quantidade de Pares '];
+    let cabecalhos = ['Código ','Categoria ','Tipo de Solado ','Tipo de Couro ','Tamanho ','Quantidade de Pares ','Ação'];
+    let trCabecalho = document.createElement('tr')
     // array com os título, cabeçalhos da tabela
 
     cabecalhos.forEach((titulo)=>{
         let th = document.createElement('th');
         th.textContent= titulo;
-        tabelaCalcados.appendChild(th);
+        trCabecalho.appendChild(th)
     });//aqui foi usado o forEach para percorrer o array e ir adicionando os Títulos na tabela
+    tabelaCalcados.appendChild(trCabecalho);
 
     for(let i=0; i<db_botas.length; i++){
         /*Nesse for é percorrido o array de objetos, base de dados, e adicionados os 
         elementos tr e tds na tabela*/
         let tr = document.createElement('tr')
         
-        for(let j in db_botas[i]){
-            /* Esse for percorre cada objeto dentro do array */
-            let td = document.createElement('td')
-            td.textContent= db_botas[i][j];
-            tr.appendChild(td)
-        }
+        let tdCodigo = document.createElement('td');
+        tdCodigo.textContent = db_botas[i].codigo;
+        tr.appendChild(tdCodigo);
+
+        let tdCategoria = document.createElement('td');
+        tdCategoria.textContent = db_botas[i].categoria;
+        tr.appendChild(tdCategoria);
+
+        let tdTipoSolado = document.createElement('td');
+        tdTipoSolado.textContent = db_botas[i].tipoSolado;
+        tr.appendChild(tdTipoSolado);
+
+        let tdTipoCouro = document.createElement('td');
+        tdTipoCouro.textContent = db_botas[i].tipoCouro;
+        tr.appendChild(tdTipoCouro);
+
+        let tdTamanho = document.createElement('td');
+        tdTamanho.textContent = db_botas[i].tamanho;
+        tr.appendChild(tdTamanho);
+
+        let tdQuantidade = document.createElement('td');
+        tdQuantidade.textContent = db_botas[i].quantidadeDePares;
+        tr.appendChild(tdQuantidade);
+
         tr.appendChild(addBotoes(i));
         tabelaCalcados.appendChild(tr);
-    }
-
+        }
 }
 function cadastrar(event){
     event.preventDefault();
-    //pega os dados dos campos
     const codigo = document.getElementById('codigo').value;
     const categoria = document.getElementById('categoria').value;
     const tipoSolado = document.getElementById('tipoSolado').value;
     const tipoCouro = document.getElementById('tipoCouro').value;
     const tamanho = document.getElementById('tamanho').value;
     const quantidade = document.getElementById('quantidade').value;
+
     //pega o atributo data-id do botão Cadastrar/Editar
     const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
     const editId = botaoCadEdit.getAttribute('data-id');
     //se o campo estiver vazio, faz a inserção de um novo objeto no array
-    if(editId == null){
+
+    if(editId === null){
         const bota = new Botina(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidade);
         db_botas.push(bota);
+       
     }
     //Se não faz a edição do objeto que tenha a posição igual ao data-id
     else{
@@ -139,12 +175,12 @@ function cadastrar(event){
         db_botas[editId].tipoCouro = tipoCouro;
         db_botas[editId].tamanho = tamanho;
         db_botas[editId].quantidadeDePares = quantidade;
-
         botaoCadEdit.textContent = 'Cadastrar';
         botaoCadEdit.removeAttribute('data-id');
     }
     mostrarDados(db_botas);
     event.target.reset();
+    localStorage.setItem('db_botas', JSON.stringify(db_botas));
 }
 
 function editarCalcado(id){
@@ -175,7 +211,10 @@ function editarCalcado(id){
 
 // função que deleta o objeto do array e atualiza a tabela
 function deletarCalcado(id){
-    db_botas.splice(id,1);
-    mostrarDados(db_botas);
+    let confirmacao = confirm('Deseja realmente excluir a bota de código '+db_botas[id].codigo+' da base de dados');
+    if(confirmacao){
+        db_botas.splice(id,1);
+        mostrarDados(db_botas);
+        localStorage.setItem('db_botas',JSON.stringify(db_botas));
+    }
 }
-mostrarDados(db_botas); // monta a tabela vazia na primeira abertura do site
