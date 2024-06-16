@@ -44,6 +44,17 @@ class Botina{
         this._quantidadeDePares = quantidadeDePares;
     }
 }
+
+const openModal = () => document.getElementById('modal')
+    .classList.add('active')
+
+const closeModal = () => document.getElementById('modal')
+    .classList.remove('active')
+
+document.getElementById('chamarCadastro').addEventListener('click', openModal)
+document.getElementById('chamarCadastro').addEventListener('click', closeModal)
+
+
 const db_botas = [] //array que irá armazenar os dados 
 const formBotas = document.getElementById('formularioBotas'); // variavel que referencia o formulário
 formBotas.addEventListener('submit',cadastrar);
