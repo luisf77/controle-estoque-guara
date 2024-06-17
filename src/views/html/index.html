@@ -16,76 +16,26 @@
     </header>
     <main>
         <button type="button" class="button blue mobile" id="cadastrarCalcado">Cadastrar Calçado</button>
-        <table class="records" id="tabelaCalcados">
-            <thead>
-                <tr>
-                    <th>Código</th>
-                    <th>Categoria</th>
-                    <th>Tipo de Solado</th>
-                    <th>Tipo de Couro</th>
-                    <th>Tamanho</th>
-                    <th>Quantidade de Pares</th>
-                    <th>Ação</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Maria</td>
-                    <td>maria@gmail.com</td>
-                    <td>(11) 97165-1111</td>
-                    <td>Anapolis</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <button type="button" class="button green">editar</button>
-                        <button type="button" class="button red">excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>João Pedro</td>
-                    <td>joao@gmail.com</td>
-                    <td>(11) 97165-2222</td>
-                    <td>Jandira</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <button type="button" class="button green">editar</button>
-                        <button type="button" class="button red">excluir</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Jose da Silva</td>
-                    <td>jose@gmail.com</td>
-                    <td>(11) 97165-3333</td>
-                    <td>São Roque</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <button type="button" class="button green">editar</button>
-                        <button type="button" class="button red">excluir</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <table class="records" id="tabelaCalcados"></table>
         
         <div class="modal" id="modal">
             <div class="modal-content">
-            <header class="modal-header">
-                <h2>Nova Bota</h2>
-                <span class="modal-close" id="modalClose">&#10006;</span>
-            </header>
-    
-            <form class="modal-form" id="formularioBotas">
-                <input type="text" class="modal-field" id="codigo" placeholder="Código">
-                <input type="text" class="modal-field" id="categoria" placeholder="Categoria">
-                <input type="text" class="modal-field" id="tipoSolado" placeholder="Tipo de Solado">
-                <input type="text" class="modal-field" id="tipoCouro" placeholder="Tipo de Couro">
-                <input type="number" class="modal-field" id="tamanho" placeholder="Tamanho">
-                <input type="number" class="modal-field" id="quantidade" placeholder="Quantidade de Pares">
-                <footer class="modal-footer">
-                    <button type="submit" class="button green" id="botaoCadastrarEditar">Salvar</button>
-                </footer>
-            </form>
+                <header class="modal-header">
+                    <h2>Nova Bota</h2>
+                    <span class="modal-close" id="modalClose">&#10006;</span>
+                </header>
+        
+                <form class="modal-form" id="formularioBotas">
+                    <input type="text" class="modal-field" id="codigo" placeholder="Código">
+                    <input type="text" class="modal-field" id="categoria" placeholder="Categoria">
+                    <input type="text" class="modal-field" id="tipoSolado" placeholder="Tipo de Solado">
+                    <input type="text" class="modal-field" id="tipoCouro" placeholder="Tipo de Couro">
+                    <input type="number" class="modal-field" id="tamanho" placeholder="Tamanho">
+                    <input type="number" class="modal-field" id="quantidade" placeholder="Quantidade de Pares">
+                    <footer class="modal-footer">
+                        <button type="submit" class="button green" id="botaoCadastrarEditar">Salvar</button>
+                    </footer>
+                </form>
             
             </div>
         </div>
