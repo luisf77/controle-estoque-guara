@@ -1,5 +1,17 @@
 import GestorBancoBotas from '../../controller/GestorBancoBotas.js';
 
+const openModal = () => document.getElementById('modal')
+    .classList.add('active');
+
+const closeModal = () => document.getElementById('modal')
+    .classList.remove('active');
+
+const abrirModal = document.getElementById('cadastrarCalcado');
+abrirModal.addEventListener('click', openModal);
+
+const fecharModal = document.getElementById('modalClose')
+fecharModal.addEventListener('click', closeModal);
+
 const bancoBotas = new GestorBancoBotas();
 bancoBotas.carregarDados();
 
@@ -15,15 +27,16 @@ function addBotoes(i){
     const botaoEditar = document.createElement('button');
     const botaoExcluir = document.createElement('button');
     botaoEditar.id = i;
-    botaoEditar.className='btn btn-warning';
+    botaoEditar.className='button green';
     botaoEditar.textContent='Editar';
     botaoEditar.addEventListener('click', function(event){ 
         const botaoId = event.target.id;
+        openModal();
         editarCalcado(botaoId);
     })// neste evente se pega o id do botão ao clicar e chama a função editarCalcados
 
     botaoExcluir.id = i;
-    botaoExcluir.className = 'btn btn-danger';
+    botaoExcluir.className = 'button red';
     botaoExcluir.textContent = 'Excluir';
     // neste evente se pega o id do botão ao clicar e chama a função deletarCalcados
     botaoExcluir.addEventListener('click', function(event){ 
@@ -114,6 +127,7 @@ function cadastrar(event){
         bancoBotas.editarBota(editId, codigo, categoria,tipoSolado,tipoCouro,tamanho,quantidade)
         botaoCadEdit.textContent = 'Cadastrar';
         botaoCadEdit.removeAttribute('data-id');
+        closeModal();
     }
     mostrarDados(bancoBotas.obterBotas());
     event.target.reset();
