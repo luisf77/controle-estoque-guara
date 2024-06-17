@@ -10,7 +10,13 @@ const abrirModal = document.getElementById('cadastrarCalcado');
 abrirModal.addEventListener('click', openModal);
 
 const fecharModal = document.getElementById('modalClose')
-fecharModal.addEventListener('click', closeModal);
+fecharModal.addEventListener('click', function(event){
+    const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
+    botaoCadEdit.textContent = 'Cadastrar';
+    botaoCadEdit.removeAttribute('data-id');
+    document.getElementById('formularioBotas').reset();
+    closeModal();
+});
 
 const bancoBotas = new GestorBancoBotas();
 bancoBotas.carregarDados();
@@ -124,6 +130,7 @@ function cadastrar(event){
     }
     //Se não faz a edição do objeto que tenha a posição igual ao data-id
     else{
+
         bancoBotas.editarBota(editId, codigo, categoria,tipoSolado,tipoCouro,tamanho,quantidade)
         botaoCadEdit.textContent = 'Cadastrar';
         botaoCadEdit.removeAttribute('data-id');
