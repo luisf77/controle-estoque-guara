@@ -9,6 +9,7 @@ const closeModal = () => document.getElementById('modal')
 const abrirModal = document.getElementById('cadastrarCalcado');
 abrirModal.addEventListener('click', openModal);
 
+//evento do botão que fecha o modal e reseta o formulario para o estado original
 const fecharModal = document.getElementById('modalClose')
 fecharModal.addEventListener('click', function(event){
     const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
