@@ -1,0 +1,126 @@
+
+.titulo {
+    color: rgb(245, 238, 238);
+}
+
+body {
+    background: #a35e4e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'karla', sans-serif;
+    position: relative;
+}
+
+label {
+    color: white;
+}
+
+#form-login {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    width: 300px;
+    box-shadow: 1 1 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+input,
+button {
+    padding: 10px;
+    margin-bottom: 10px;
+
+}
+
+button {
+    cursor: pointer;
+    width: 100%;
+}
+
+input {
+    width: 92.1%;
+
+}
+
+button:active {
+    opacity: 0.8;
+}
+
+.clear {
+    background: transparent;
+    border: none;
+    color: white;
+}
+
+.solid {
+    color: #a35e4e;
+    background: white;
+    border: none;
+}
+
+.outline {
+    background: transparent;
+    color: white;
+    border: 1px solid white;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #00000090;
+    opacity: 0;
+    z-index: -1;
+}
+
+.modal.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+.modal-close {
+    position: absolute;
+    right: 0;
+    display: block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    user-select: none;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    background-color: #FF4949;
+    color: white;
+}
+
+.modal-form {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.modal-header {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1rem;
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50vw;
+    margin: 15vh auto;
+    padding-bottom: 20px;
+    background: #b86350;
+    box-shadow: 1px 1px 10px black;
+}
