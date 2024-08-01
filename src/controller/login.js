@@ -28,17 +28,25 @@ class Connection {
   }
 
   login(email, password) {
-    let result = null;
-    this.auth.signInWithEmailAndPassword(email, password).then(function (userCredential) {
+    this.auth.signInWithEmailAndPassword(email, password).then(userCredential => {
       const user = userCredential.user;
-      database.ref('Users/' + user.uid).update({ last_login: new Date().toString() });
-      // Exibe uma mensagem de sucesso
-      Window.location.href = "/src/views/html/index.html";
-      return null;
-    }).catch(function (error) {
-      // Exibe uma mensagem de erro em caso de falha na autenticação
-      return result = error.message.toString();
+      this.database.ref('Users/'+user.uid).update({ last_login: new Date().toString()});
+      window.location.href = "home.html";
+
+    }).catch(error => {
+      displayFeedback('Email ou Senha Inválidos!',true);
     });
+
   }
 }
+
+function displayFeedback(message, isError = false) {
+  // Obtém o elemento de feedback na página HTML
+  const feedbackContainer = document.getElementById('feedback');
+  // Define a cor do texto com base no tipo de mensagem (sucesso ou erro)
+  feedbackContainer.style.color = isError ? 'red' : 'green';
+  // Define o texto da mensagem no elemento de feedback
+  feedbackContainer.innerText = message;
+}
+
 export default Connection;

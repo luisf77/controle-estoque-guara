@@ -124,3 +124,8 @@ button:active {
     background: #b86350;
     box-shadow: 1px 1px 10px black;
 }
+.modal-footer{
+    background-color: inherit;
+    text-align: right;
+    padding: 0 20px;
+}
