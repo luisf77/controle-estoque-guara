@@ -1,5 +1,5 @@
 import GestorBancoBotas from '../../controller/GestorBancoBotas.js';
-
+import Connection from '../../controller/Connection.js';
 const openModal = () => document.getElementById('modal')
     .classList.add('active');
 
@@ -17,6 +17,25 @@ fecharModal.addEventListener('click', function(event){
     botaoCadEdit.removeAttribute('data-id');
     document.getElementById('formularioBotas').reset();
     closeModal();
+});
+const connection = new Connection();
+
+//caso não haja usuario logado, redirecionara para a tela de login
+connection.auth.onAuthStateChanged(user=>{
+    if(!user){
+        window.location.href= 'index.html';
+    }
+});
+
+document.getElementById('logOut').addEventListener('click',async()=>{
+    try{
+        const result = await connection.logout();
+        if(result){
+            window.location.href = 'index.html'
+        }
+    }catch(error){
+        alert(error.message)
+    }
 });
 
 const bancoBotas = new GestorBancoBotas();

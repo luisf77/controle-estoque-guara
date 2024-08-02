@@ -30,6 +30,15 @@ formLogin.botaoFecharCadastro().addEventListener('click', (e) => {
     closeModal();
 });
 const connection = new Connection();
+window.onload = function(){
+    connection.auth.onAuthStateChanged(user=>{
+        if(user){
+            window.location.href= 'home.html';
+        }
+});
+
+    
+}
 //Evento do botão login
 formLogin.botaoLogin().addEventListener('click', async () => {
 
@@ -45,7 +54,7 @@ formLogin.botaoLogin().addEventListener('click', async () => {
 //Evento do botão Recuperar Senha
 formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
     const email = prompt('Digite seu Email de recuperação:', formLogin.email().value);
-    if (email != null) {
+    if (email != null && email!='') {
         try {
             if (validate_email(email)) {
                 // nesta parte a variavel message recebe a resposta assincrona do firebase tratada
@@ -58,21 +67,21 @@ formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
     }
 });
 //Evento do cadastro
-formLogin.botaoCadastrar().addEventListener('click',async()=>{
-    try{
-        if (validate_email(formCadastro.email().value) && validate_password(formCadastro.senha().value)){
-            if(formCadastro.senha().value == formCadastro.senhaConfirm().value){
-                const message = await connection.register(formCadastro.email().value,formCadastro.senha().value);
+formLogin.botaoCadastrar().addEventListener('click', async () => {
+    try {
+        if (validate_email(formCadastro.email().value) && validate_password(formCadastro.senha().value)) {
+            if (formCadastro.senha().value == formCadastro.senhaConfirm().value) {
+                const message = await connection.register(formCadastro.email().value, formCadastro.senha().value);
                 alert(message);
                 formCadastro.formCad().reset();
                 closeModal();
-            }else{
+            } else {
                 throw new Error('senha de confirmação está diferente!');
             }
         }
-    }catch (error) {
+    } catch (error) {
         alert(error.message);
-      }
+    }
 });
 
 

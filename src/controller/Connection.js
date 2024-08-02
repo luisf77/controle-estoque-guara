@@ -36,7 +36,14 @@ class Connection {
     }).catch(error => {
       throw new Error('Usuario ou senha incorretos!');
     });
+  }
 
+  logout() {
+    return this.auth.signOut().then(() => {
+      return true;
+    }).catch(() => {
+      throw new Error('Erro ao fazer logOut');
+    });
   }
 
   recoverPassword(email) {
@@ -47,7 +54,7 @@ class Connection {
     });
   }
 
-  register(email,password){
+  register(email, password) {
     // Cria um novo usuário no Firebase com o email e senha fornecidos
     return this.auth.createUserWithEmailAndPassword(email, password).then(userCredential => {
       const user = userCredential.user;
