@@ -38,13 +38,29 @@ class Connection {
     });
 
   }
+
   recoverPassword(email) {
     return this.auth.sendPasswordResetEmail(email).then(() => {
-      return'Email de recuperação enviado com sucesso!';
+      return 'Email de recuperação enviado com sucesso!';
     }).catch(error => {
       throw new Error(error.message);
     });
+  }
 
+  register(email,password){
+    // Cria um novo usuário no Firebase com o email e senha fornecidos
+    return this.auth.createUserWithEmailAndPassword(email, password).then(userCredential => {
+      const user = userCredential.user;
+      const user_data = {
+        email: email,
+        registration_time: new Date().toString()
+      };
+      this.database.ref('users/' + user.uid).set(user_data);
+      return 'Usuario Criado';
+
+    }).catch(error => {
+      throw new Error(error.message);
+    });
   }
 }
 export default Connection;

@@ -1,4 +1,4 @@
-import Connection from "/src/controller/login.js"
+import Connection from "/src/controller/Connection.js"
 //coleção dos itens interativos da página
 const formLogin = {
     email: () => document.getElementById('emailLog'),
@@ -10,6 +10,12 @@ const formLogin = {
     botaoRecuperarSenha: () => document.getElementById('recoverPassword'),
     feedbackContainer: () => document.getElementById('feedback')
 }
+const formCadastro = {
+    email: () => document.getElementById('emailCad'),
+    senha: () => document.getElementById('passwordCad'),
+    senhaConfirm: () => document.getElementById('passwordConfirm'),
+    formCad: () => document.getElementById('formularioCadastro')
+}
 
 const openModal = () => document.getElementById('modal')
     .classList.add('active');
@@ -20,14 +26,15 @@ const closeModal = () => document.getElementById('modal')
 formLogin.botaoAbrirCadastro().addEventListener('click', openModal);
 
 formLogin.botaoFecharCadastro().addEventListener('click', (e) => {
-    document.getElementById('formularioCadastro').reset();
+    formCadastro.formCad().reset();
     closeModal();
 });
 const connection = new Connection();
-
+//Evento do botão login
 formLogin.botaoLogin().addEventListener('click', async () => {
 
     try {
+        // nesta parte a variavel message recebe a resposta assincrona do firebase tratada
         const message = await connection.login(formLogin.email().value, formLogin.senha().value);
         console.log(message);
         window.location.href = "home.html";
@@ -35,12 +42,13 @@ formLogin.botaoLogin().addEventListener('click', async () => {
         displayFeedback(error.message, true);
     }
 });
-
+//Evento do botão Recuperar Senha
 formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
     const email = prompt('Digite seu Email de recuperação:', formLogin.email().value);
     if (email != null) {
         try {
             if (validate_email(email)) {
+                // nesta parte a variavel message recebe a resposta assincrona do firebase tratada
                 const message = await connection.recoverPassword(email);
                 alert(message);
             }
@@ -48,6 +56,23 @@ formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
             alert(error.message);
         }
     }
+});
+//Evento do cadastro
+formLogin.botaoCadastrar().addEventListener('click',async()=>{
+    try{
+        if (validate_email(formCadastro.email().value) && validate_password(formCadastro.senha().value)){
+            if(formCadastro.senha().value == formCadastro.senhaConfirm().value){
+                const message = await connection.register(formCadastro.email().value,formCadastro.senha().value);
+                alert(message);
+                formCadastro.formCad().reset();
+                closeModal();
+            }else{
+                throw new Error('senha de confirmação está diferente!');
+            }
+        }
+    }catch (error) {
+        alert(error.message);
+      }
 });
 
 
@@ -58,6 +83,7 @@ function displayFeedback(message, isError = false) {
     // Define o texto da mensagem no elemento de feedback
     formLogin.feedbackContainer().innerText = message;
 }
+//validar formato de email
 function validate_email(email) {
     const expression = /^[^@]+@\w+(\.\w+)+\w$/;
     if (expression.test(email)) {
@@ -69,11 +95,11 @@ function validate_email(email) {
 
 // Função para validar a senha (no mínimo 6 caracteres)
 function validate_password(password) {
-    const expression = /^(?=.*[a-zA-Z])(?=.*[0-9]).{6,10}$/;
+    const expression = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/;
     if (expression.test(password)) {
         return true
     }
     else {
-        throw new Error('Senha deve ter de 6 a 10 caracteres e ao menos uma letra e um número!');
+        throw new Error('Senha deve ter mais de 8 caracteres e ao menos uma letra e um número!');
     }
 }
