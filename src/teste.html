@@ -1,84 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Prompt</title>
+  <style>
+    /* Estilos para o modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      animation: animatetop 0.4s;
+    }
+
+    @keyframes animatetop {
+      from {top: -300px; opacity: 0}
+      to {top: 0; opacity: 1}
+    }
+
+    .modal-header {
+      font-size: 1.25em;
+      margin-bottom: 10px;
+    }
+
+    .modal-footer {
+      margin-top: 10px;
+      text-align: right;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      cursor: pointer;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      font-size: 1em;
+    }
+
+    .btn:focus {
+      outline: none;
+    }
+
+    .btn:hover {
+      background-color: #0056b3;
+    }
+
+    .btn.cancel {
+      background-color: #dc3545;
+    }
+
+    .btn.cancel:hover {
+      background-color: #c82333;
+    }
+  </style>
 </head>
-
 <body>
-    <input type="text" id="emailLog" placeholder="Email">
-    <input type="password" id="passwordLog" placeholder="Password">
-    <button id="loginButton">Login</button>
 
-    <script>
-        class Connection {
-            constructor() {
-                this.firebaseConfig = {
-                    apiKey: "AIzaSyAtsOLZep8R3GIw-Zmjyur0iowdrGqEQ4Q",
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">Prompt</div>
+    <div class="modal-body">
+      <p id="modal-message"></p>
+      <input type="text" id="modal-input" style="width: 100%; padding: 10px; margin-top: 10px;">
+    </div>
+    <div class="modal-footer">
+      <button class="btn cancel" onclick="closeModal(false)">Cancel</button>
+      <button class="btn" onclick="closeModal(true)">OK</button>
+    </div>
+  </div>
+</div>
 
-                    authDomain: "teste-fb1cb.firebaseapp.com",
+<script>
+  function showPrompt(message, callback) {
+    document.getElementById('modal-message').innerText = message;
+    document.getElementById('myModal').style.display = 'block';
 
-                    projectId: "teste-fb1cb",
+    window.closeModal = function(isConfirmed) {
+      const input = document.getElementById('modal-input').value;
+      document.getElementById('myModal').style.display = 'none';
+      callback(isConfirmed ? input : null);
+    }
+  }
 
-                    storageBucket: "teste-fb1cb.appspot.com",
+  // Exemplo de uso
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('showPromptBtn').addEventListener('click', () => {
+      showPrompt('Digite algo:', (response) => {
+        console.log('Resposta do prompt:', response);
+      });
+    });
+  });
+</script>
 
-                    messagingSenderId: "731842263197",
+<!-- Botão para mostrar o prompt -->
+<button id="showPromptBtn" class="btn">Mostrar Prompt</button>
 
-                    appId: "1:731842263197:web:7d351cd55d26ff40d73c74",
-
-                    measurementId: "G-L12HRYDS7T"
-                };
-
-                if (!firebase.apps.length) {
-                    firebase.initializeApp(this.firebaseConfig);
-                }
-
-                this.auth = firebase.auth();
-                this.database = firebase.database();
-                this.mensagem = '';
-                this.confirmErro = false;
-            }
-
-            login(email, password) {
-                return this.auth.signInWithEmailAndPassword(email, password)
-                    .then((userCredential) => {
-                        const user = userCredential.user;
-                        return this.database.ref('Users/' + user.uid).update({ last_login: new Date().toString() })
-                            .then(() => {
-                                this.mensagem = 'Usuário logado!';
-                                this.confirmErro = false;
-                                return 1;
-                            });
-                    })
-                    .catch((error) => {
-                        this.mensagem = error.message;
-                        this.confirmErro = true;
-                        return 0;
-                    });
-            }
-        }
-
-        document.getElementById('loginButton').addEventListener('click', function () {
-            const email = document.getElementById('emailLog').value;
-            const password = document.getElementById('passwordLog').value;
-            const connection = new Connection();
-
-            connection.login(email, password).then((loginResult) => {
-                console.log(loginResult);
-
-                if (loginResult === 1) {
-                    window.location.href = "views/html/index.html";
-                } else {
-                    console.error("Login failed:", connection.mensagem);
-                }
-            });
-        });
-    </script>
 </body>
-
 </html>

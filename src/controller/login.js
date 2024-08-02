@@ -28,25 +28,23 @@ class Connection {
   }
 
   login(email, password) {
-    this.auth.signInWithEmailAndPassword(email, password).then(userCredential => {
+    return this.auth.signInWithEmailAndPassword(email, password).then(userCredential => {
       const user = userCredential.user;
-      this.database.ref('Users/'+user.uid).update({ last_login: new Date().toString()});
-      window.location.href = "home.html";
+      this.database.ref('Users/' + user.uid).update({ last_login: new Date().toString() });
+      return 'Usuario logado com sucesso';
 
     }).catch(error => {
-      displayFeedback('Email ou Senha Inválidos!',true);
+      throw new Error('Usuario ou senha incorretos!');
+    });
+
+  }
+  recoverPassword(email) {
+    return this.auth.sendPasswordResetEmail(email).then(() => {
+      return'Email de recuperação enviado com sucesso!';
+    }).catch(error => {
+      throw new Error(error.message);
     });
 
   }
 }
-
-function displayFeedback(message, isError = false) {
-  // Obtém o elemento de feedback na página HTML
-  const feedbackContainer = document.getElementById('feedback');
-  // Define a cor do texto com base no tipo de mensagem (sucesso ou erro)
-  feedbackContainer.style.color = isError ? 'red' : 'green';
-  // Define o texto da mensagem no elemento de feedback
-  feedbackContainer.innerText = message;
-}
-
 export default Connection;
