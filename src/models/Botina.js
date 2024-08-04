@@ -1,11 +1,15 @@
 class Botina{
-    constructor(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidadeDePares){
+    constructor(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidadeDePares,user,indexDado){
         this._codigo = codigo;
         this._categoria = categoria;
         this._tipoSolado = tipoSolado;
         this._tipoCouro = tipoCouro;
         this._tamanho = tamanho;
         this._quantidadeDePares = quantidadeDePares;
+        this.user = {
+            uid: user
+        };
+        this.uid = indexDado;
     }
     get codigo(){
         return this._codigo;

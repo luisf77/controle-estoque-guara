@@ -1,5 +1,6 @@
 import GestorBancoBotas from '../../controller/GestorBancoBotas.js';
 import Connection from '../../controller/Connection.js';
+
 const openModal = () => document.getElementById('modal')
     .classList.add('active');
 
@@ -11,51 +12,57 @@ abrirModal.addEventListener('click', openModal);
 
 //evento do botão que fecha o modal e reseta o formulario para o estado original
 const fecharModal = document.getElementById('modalClose')
-fecharModal.addEventListener('click', function(event){
+fecharModal.addEventListener('click', function (event) {
     const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
     botaoCadEdit.textContent = 'Cadastrar';
     botaoCadEdit.removeAttribute('data-id');
     document.getElementById('formularioBotas').reset();
     closeModal();
 });
+
 const connection = new Connection();
+const bancoBotas = new GestorBancoBotas();
 
 //caso não haja usuario logado, redirecionara para a tela de login
-connection.auth.onAuthStateChanged(user=>{
-    if(!user){
-        window.location.href= 'index.html';
+connection.auth.onAuthStateChanged(async (user) => {
+    if (!user) {
+        window.location.href = 'index.html';
+    } else {
+        //recebe o array de botas assincrono do firestore
+        try {
+            const db_botas = await bancoBotas.carregarDados(user);
+            //console.log(db_botas)
+            if (typeof (db_botas) != 'string') {
+                mostrarDados(db_botas);
+            }
+        } catch (error) {
+            //console.log(error);
+            alert(error.message);
+        }
     }
 });
 
-document.getElementById('logOut').addEventListener('click',async()=>{
-    try{
+document.getElementById('logOut').addEventListener('click', async () => {
+    try {
         const result = await connection.logout();
-        if(result){
+        if (result) {
             window.location.href = 'index.html'
         }
-    }catch(error){
+    } catch (error) {
         alert(error.message)
     }
 });
-
-const bancoBotas = new GestorBancoBotas();
-bancoBotas.carregarDados();
-
-//chamada dos dados para construir a tabela
-window.onload = function() { 
-    mostrarDados(bancoBotas.obterBotas());
-}
 //evento principal do formulário
 const formBotas = document.getElementById('formularioBotas');
-formBotas.addEventListener('submit',cadastrar);
+formBotas.addEventListener('submit', cadastrar);
 
-function addBotoes(i){
+function addBotoes(i) {
     const botaoEditar = document.createElement('button');
     const botaoExcluir = document.createElement('button');
     botaoEditar.id = i;
-    botaoEditar.className='button green';
-    botaoEditar.textContent='Editar';
-    botaoEditar.addEventListener('click', function(event){ 
+    botaoEditar.className = 'button green';
+    botaoEditar.textContent = 'Editar';
+    botaoEditar.addEventListener('click', function (event) {
         const botaoId = event.target.id;
         openModal();
         editarCalcado(botaoId);
@@ -65,7 +72,7 @@ function addBotoes(i){
     botaoExcluir.className = 'button red';
     botaoExcluir.textContent = 'Excluir';
     // neste evente se pega o id do botão ao clicar e chama a função deletarCalcados
-    botaoExcluir.addEventListener('click', function(event){ 
+    botaoExcluir.addEventListener('click', function (event) {
         const botaoId = event.target.id;
         // console.log('Excluir o item Id:', buttonId);
         deletarCalcado(botaoId);
@@ -77,31 +84,31 @@ function addBotoes(i){
     return tdBotoes;
 }
 
-function mostrarDados(db_botas){
+function mostrarDados(db_botas) {
     /*Dentro dessa função é criado os elementos da tabela, cabeçalhos e linhas da tabela
      e é feita a leitura dos dados do array de objetos e inseridos dentro da taabela*/
 
     const tabelaCalcados = document.getElementById('tabelaCalcados');
-    tabelaCalcados.innerHTML=''; 
+    tabelaCalcados.innerHTML = '';
     /*essa linha faz a limpeza de toda tabela para ser atualizada e não gerar 
     linhas duplicadas quando a função é chamada para atualizar a tabela*/
 
-    const cabecalhos = ['Código ','Categoria ','Tipo de Solado ','Tipo de Couro ','Tamanho ','Quantidade de Pares ','Ação'];
+    const cabecalhos = ['Código ', 'Categoria ', 'Tipo de Solado ', 'Tipo de Couro ', 'Tamanho ', 'Quantidade de Pares ', 'Ação'];
     const trCabecalho = document.createElement('tr')
     // array com os título, cabeçalhos da tabela
 
-    cabecalhos.forEach((titulo)=>{
+    cabecalhos.forEach((titulo) => {
         let th = document.createElement('th');
-        th.textContent= titulo;
+        th.textContent = titulo;
         trCabecalho.appendChild(th)
     });//aqui foi usado o forEach para percorrer o array e ir adicionando os Títulos na tabela
     tabelaCalcados.appendChild(trCabecalho);
 
-    for(let i=0; i<db_botas.length; i++){
+    for (let i = 0; i < db_botas.length; i++) {
         /*Nesse for é percorrido o array de objetos, base de dados, e adicionados os 
         elementos tr e tds na tabela*/
         let tr = document.createElement('tr')
-        
+
         let tdCodigo = document.createElement('td');
         tdCodigo.textContent = db_botas[i].codigo;
         tr.appendChild(tdCodigo);
@@ -126,11 +133,11 @@ function mostrarDados(db_botas){
         tdQuantidade.textContent = db_botas[i].quantidadeDePares;
         tr.appendChild(tdQuantidade);
 
-        tr.appendChild(addBotoes(i));
+        tr.appendChild(addBotoes(db_botas[i].uid));
         tabelaCalcados.appendChild(tr);
-        }
+    }
 }
-function cadastrar(event){
+async function cadastrar(event) {
     event.preventDefault();
     const codigo = document.getElementById('codigo').value;
     const categoria = document.getElementById('categoria').value;
@@ -138,30 +145,55 @@ function cadastrar(event){
     const tipoCouro = document.getElementById('tipoCouro').value;
     const tamanho = document.getElementById('tamanho').value;
     const quantidade = document.getElementById('quantidade').value;
-
     //pega o atributo data-id do botão Cadastrar/Editar
     const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
     const editId = botaoCadEdit.getAttribute('data-id');
     //se o campo estiver vazio, faz a inserção de um novo objeto no array
 
-    if(editId === null){
-        bancoBotas.adicionarBota(codigo,categoria,tipoSolado,tipoCouro,tamanho,quantidade);
-       
+    if (editId === null) {
+        try {
+            const user = await connection.auth.currentUser.uid;
+            const message = await bancoBotas.adicionarBota(codigo, categoria, tipoSolado, tipoCouro, tamanho, quantidade, user);
+            alert(message);
+        } catch (error) {
+            alert(error.message)
+        }
     }
-    //Se não faz a edição do objeto que tenha a posição igual ao data-id
-    else{
+    //Se não faz a edição do objeto que exista no firestor igual ao de uid = data-id
+    else {
+        try {
+            const user = await connection.auth.currentUser.uid;
+            const message = await bancoBotas.editarBota(editId, codigo, categoria, tipoSolado, tipoCouro, tamanho, quantidade, user);
+            alert(message);
+            botaoCadEdit.textContent = 'Cadastrar';
+            botaoCadEdit.removeAttribute('data-id');
+            closeModal();
 
-        bancoBotas.editarBota(editId, codigo, categoria,tipoSolado,tipoCouro,tamanho,quantidade)
-        botaoCadEdit.textContent = 'Cadastrar';
-        botaoCadEdit.removeAttribute('data-id');
-        closeModal();
+        } catch (error) {
+            alert(error.message);
+            botaoCadEdit.textContent = 'Cadastrar';
+            botaoCadEdit.removeAttribute('data-id');
+            closeModal();
+        }
+
     }
-    mostrarDados(bancoBotas.obterBotas());
+
+    try {
+        const db_botas = await bancoBotas.carregarDados(connection.auth.currentUser);
+        //console.log(db_botas)
+        if (typeof (db_botas) != 'string') {
+            mostrarDados(db_botas);
+        }
+    } catch (error) {
+        //console.log(error);
+        alert(error.message);
+    }
+
     event.target.reset();
-    
+
 }
 
-function editarCalcado(id){
+async function editarCalcado(id) {
     /*
     essa função vai somente carregar os dados no formulário 
     para a edição e mudar o status do botão cadastrar para editar
@@ -169,8 +201,8 @@ function editarCalcado(id){
     entrar no else da função cadastrar
     */
     const botaoCadEdit = document.getElementById('botaoCadastrarEditar');
-    botaoCadEdit.textContent= 'Editar';
-    botaoCadEdit.setAttribute('data-id',id);//adicionando o atributo data-id para mudar o status do botão cadastrar
+    botaoCadEdit.textContent = 'Editar';
+    botaoCadEdit.setAttribute('data-id', id);//adicionando o atributo data-id para mudar o status do botão cadastrar
     //pega os campos
     const codigo = document.getElementById('codigo');
     const categoria = document.getElementById('categoria');
@@ -179,20 +211,44 @@ function editarCalcado(id){
     const tamanho = document.getElementById('tamanho');
     const quantidade = document.getElementById('quantidade');
     //pega o array no id e joga nos campos
-    const botina = bancoBotas.obterBotas()[id];
-    codigo.value = botina.codigo;
-    categoria.value = botina.categoria;
-    tipoSolado.value = botina.tipoSolado;
-    tipoCouro.value = botina.tipoCouro;
-    tamanho.value = botina.tamanho;
-    quantidade.value = botina.quantidadeDePares;
+    try {
+        const botina = await bancoBotas.obterBotaPeloUid(id);
+        //console.log('fuction editar', botina)
+
+        codigo.value = botina._codigo;
+        categoria.value = botina._categoria;
+        tipoSolado.value = botina._tipoSolado;
+        tipoCouro.value = botina._tipoCouro;
+        tamanho.value = botina._tamanho;
+        quantidade.value = botina._quantidadeDePares;
+
+    } catch (error) {
+        alert(error.message)
     }
 
+}
+
 // função que deleta o objeto do array e atualiza a tabela
-function deletarCalcado(id){
-    const confirmacao = confirm('Deseja realmente excluir a bota de código '+bancoBotas.obterBotas()[id].codigo+' da base de dados');
-    if(confirmacao){
-        bancoBotas.deletarBota(id);
-        mostrarDados(bancoBotas.obterBotas());
+async function deletarCalcado(id) {
+    try {
+        const bota = await bancoBotas.obterBotaPeloUid(id);
+        const confirmacao = confirm('Deseja realmente excluir a bota de código ' + bota.codigo + ' da base de dados');
+        if (confirmacao) {
+            const message = await bancoBotas.deletarBota(id);
+            alert(message);
+        }
+    } catch (error){
+        alert('erro de deleção:',error.message);
+    }
+
+    try {
+        const db_botas = await bancoBotas.carregarDados(connection.auth.currentUser);
+        //console.log(db_botas)
+        if (typeof (db_botas) != 'string') {
+            mostrarDados(db_botas);
+        }
+    } catch (error) {
+        //console.log(error);
+        alert('carregamento',error.message);
     }
 }
