@@ -30,6 +30,9 @@ connection.auth.onAuthStateChanged(async (user) => {
     } else {
         //recebe o array de botas assincrono do firestore
         try {
+            const nomeUser = await connection.carregarUserData(user.uid);
+            //console.log('primeiro',nomeUser.nome)
+            document.getElementById('nomeUsertop').textContent= `🔧 ${nomeUser.nome}`;
             const db_botas = await bancoBotas.carregarDados(user);
             //console.log(db_botas)
             if (typeof (db_botas) != 'string') {
@@ -42,6 +45,24 @@ connection.auth.onAuthStateChanged(async (user) => {
     }
 });
 
+//botão mais informações
+const openModalInfo = () => document.getElementById('userInfo')
+    .classList.add('active');
+
+const closeModalInfo = () => document.getElementById('userInfo')
+    .classList.remove('active');
+
+document.getElementById('maisInfo').addEventListener('click', () => {
+    carregarInfoUser(connection.auth.currentUser.uid);
+    openModalInfo();
+});
+document.getElementById('modalCloseInfo').addEventListener('click', () => {
+    closeModalInfo();
+});
+
+
+
+//botão logOut
 document.getElementById('logOut').addEventListener('click', async () => {
     try {
         const result = await connection.logout();
@@ -215,12 +236,12 @@ async function editarCalcado(id) {
         const botina = await bancoBotas.obterBotaPeloUid(id);
         //console.log('fuction editar', botina)
 
-        codigo.value = botina._codigo;
-        categoria.value = botina._categoria;
-        tipoSolado.value = botina._tipoSolado;
-        tipoCouro.value = botina._tipoCouro;
-        tamanho.value = botina._tamanho;
-        quantidade.value = botina._quantidadeDePares;
+        codigo.value = botina.codigo;
+        categoria.value = botina.categoria;
+        tipoSolado.value = botina.tipoSolado;
+        tipoCouro.value = botina.tipoCouro;
+        tamanho.value = botina.tamanho;
+        quantidade.value = botina.quantidadeDePares;
 
     } catch (error) {
         alert(error.message)
@@ -250,5 +271,100 @@ async function deletarCalcado(id) {
     } catch (error) {
         //console.log(error);
         alert('carregamento',error.message);
+    }
+}
+// carrega os dados na lista de mais informações
+async function carregarInfoUser(uid) {
+    const nomeUser = document.getElementById('nomeUser');
+    const sNomeRazaoSocialUser = document.getElementById('sNomeRazaoSocialUser');
+    const email = document.getElementById('email');
+    const telefone = document.getElementById('telefone');
+    const cpfCnpj = document.getElementById('cpfCnpj');
+    try {
+        const dadosUsuario= await connection.carregarUserData(uid);
+        if(dadosUsuario.tipo=="pessoaFisica"){
+
+            nomeUser.textContent=''
+            const strongNome = document.createElement('strong');
+            strongNome.textContent = 'Nome:';
+            nomeUser.appendChild(strongNome);
+            const strNome = document.createElement('p');
+            strNome.textContent = dadosUsuario.nome;
+            nomeUser.appendChild(strNome);
+
+            sNomeRazaoSocialUser.textContent=''
+            const strongSobrenome = document.createElement('strong');
+            strongSobrenome.textContent = 'Sobrenome:';
+            sNomeRazaoSocialUser.appendChild(strongSobrenome);
+            const strSobrenome = document.createElement('p');
+            strSobrenome.textContent = dadosUsuario.sobrenome;
+            sNomeRazaoSocialUser.appendChild(strSobrenome);
+
+            email.textContent=''
+            const strongEmail = document.createElement('strong');
+            strongEmail.textContent = 'Email:';
+            email.appendChild(strongEmail);
+            const strEmail = document.createElement('p');
+            strEmail.textContent = dadosUsuario.email;
+            email.appendChild(strEmail);
+            
+            telefone.textContent=''
+            const strongTelefone = document.createElement('strong');
+            strongTelefone.textContent = 'Telefone:';
+            telefone.appendChild(strongTelefone);
+            const strTelefone = document.createElement('p');
+            strTelefone.textContent = dadosUsuario.telefone;
+            telefone.appendChild(strTelefone);
+
+            cpfCnpj.textContent=''
+            const strongCpf = document.createElement('strong');
+            strongCpf.textContent = 'Cpf:';
+            cpfCnpj.appendChild(strongCpf);
+            const strCnpj = document.createElement('p');
+            strCnpj.textContent = dadosUsuario.cpf;
+            cpfCnpj.appendChild(strCnpj);
+        }else{
+            nomeUser.textContent=''
+            const strongNome = document.createElement('strong');
+            strongNome.textContent = 'Nome:';
+            nomeUser.appendChild(strongNome);
+            const strNome = document.createElement('p');
+            strNome.textContent = dadosUsuario.nome;
+            nomeUser.appendChild(strNome);
+
+            sNomeRazaoSocialUser.textContent=''
+            const strongRazaoSocial = document.createElement('strong');
+            strongRazaoSocial.textContent = 'Razão Social:';
+            sNomeRazaoSocialUser.appendChild(strongRazaoSocial);
+            const strRazaoSocial = document.createElement('p');
+            strRazaoSocial.textContent = dadosUsuario.razaoSocial;
+            sNomeRazaoSocialUser.appendChild(strRazaoSocial);
+
+            email.textContent=''
+            const strongEmail = document.createElement('strong');
+            strongEmail.textContent = 'Email:';
+            email.appendChild(strongEmail);
+            const strEmail = document.createElement('p');
+            strEmail.textContent = dadosUsuario.email;
+            email.appendChild(strEmail);
+            
+            telefone.textContent=''
+            const strongTelefone = document.createElement('strong');
+            strongTelefone.textContent = 'Telefone:';
+            telefone.appendChild(strongTelefone);
+            const strTelefone = document.createElement('p');
+            strTelefone.textContent = dadosUsuario.telefone;
+            telefone.appendChild(strTelefone);
+
+            cpfCnpj.textContent=''
+            const strongCnpj = document.createElement('strong');
+            strongCnpj.textContent = 'Cnpj:';
+            cpfCnpj.appendChild(strongCnpj);
+            const strCnpj = document.createElement('p');
+            strCnpj.textContent = dadosUsuario.cnpj;
+            cpfCnpj.appendChild(strCnpj);
+        }
+    } catch (error) {
+        alert(error.message);
     }
 }

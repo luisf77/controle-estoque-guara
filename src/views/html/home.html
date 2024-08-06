@@ -9,14 +9,22 @@
     <link rel="stylesheet" href="/src/views/css/button.css" type="text/css">
     <link href="/src/views/css/main.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="/src/views/css/records.css" type="text/css">
+    <link rel="stylesheet" href="/src/views/css/profile.css" type="text/css">
 
 </head>
 
 <body>
     <header>
-        <button class="btSair" id="logOut" type="button">Sair</button>
         <h1 class="header-title">Controle de Estoque de Botas Guará </h1>
+
     </header>
+    <div class="user-profile">
+        <span class="user-name" id="nomeUsertop">Nome do Usuário</span>
+        <div class="user-menu">
+            <button class="info-button" id="maisInfo">Mais Informações</button>
+            <button class="logout-button" id="logOut">Sair</button>
+        </div>
+    </div>
     <main>
         <button type="button" class="button blue mobile" id="cadastrarCalcado">Cadastrar Calçado</button>
         <table class="records" id="tabelaCalcados"></table>
@@ -41,6 +49,23 @@
                 </form>
 
             </div>
+        </div>
+        <div class="modal" id="userInfo">
+            <div class="modal-content">
+            <header class="modal-header">
+                <h2>Informações do Usuário</h2>
+                <span class="modal-close" id="modalCloseInfo">&#10006;</span>
+            </header>
+            
+            <ul>
+                <li id="nomeUser"><strong>Nome:</strong></li>
+                <li id="sNomeRazaoSocialUser"><strong>Sobrenome:</strong></li>
+                <li id="email"><strong>Email:</strong></li>
+                <li id="telefone"><strong>Telefone:</strong></li>
+                <li id="cpfCnpj"><strong>Cpf:</strong></li>
+            </ul>
+        </div>
+    </div>
         </div>
     </main>
     <footer>

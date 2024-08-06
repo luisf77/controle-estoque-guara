@@ -1,0 +1,67 @@
+.user-profile {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    background-color: #a35e4e;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+    margin-right: 20px;
+    font-weight: bold;
+    position: relative;
+    color: white;
+}
+
+.user-menu {
+    display: none;
+    position: relative;
+    top: 100%;
+    left: 0;
+    background-color:transparent;
+    padding: 10px;
+    border: none;
+    
+    
+}
+
+.user-profile:hover .user-menu {
+    display: block;
+}
+
+.user-menu button {
+    display: block;
+    margin: 5px 0;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.info-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.logout-button {
+    background-color: #f44336;
+    color: white;
+}
+
+.user-menu button:hover {
+    opacity: 0.8;
+}
+.modal ul {
+    list-style-type: none;
+    padding: 15px;
+}
+
+.modal li {
+    margin-bottom: 10px;
+
+}

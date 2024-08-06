@@ -86,7 +86,7 @@ class Connection {
     } else {
       //console.log('entrou no else')
       const pessoaJuridica = new PessoaJuridica(pJuridicaFisica, user, nome, telefone, email, sNomeRazaoSocial, cpfCnpj);
-      
+
       return firebase.firestore()
         .collection('users')
         .add(JSON.parse(JSON.stringify(pessoaJuridica))) //tira os gets e set para simplificar o objeto e mandar para o firestore
@@ -96,6 +96,51 @@ class Connection {
           throw new Error(error.message);
         });
     }
+  }
+  carregarUserData(uid) {
+    //console.log(uid);
+    return firebase.firestore()
+    .collection('users')
+    .where('user.uid', '==',uid)
+    .get()
+    .then(snapshot => {
+        const dadosUsuario = snapshot.docs.map(doc => ({
+          ...doc.data()
+        }));
+        //console.log(dadosUsuario);
+        if (dadosUsuario.length>0) {
+          //console.log('existe')
+          //console.log(dadosUsuario[0]._tipo)
+          if (dadosUsuario[0]._tipo == 'pessoaFisica') {
+            console.log('atendeu aos parametros de montagem do objeto')
+            return new PessoaFisica(
+              dadosUsuario[0]._tipo,
+              dadosUsuario[0].user,
+              dadosUsuario[0]._nome,
+              dadosUsuario[0]._telefone,
+              dadosUsuario[0]._email,
+              dadosUsuario[0]._sobrenome,
+              dadosUsuario[0]._cpf
+
+            );
+          } else {
+            return new PessoaJuridica(
+              dadosUsuario[0]._tipo,
+              dadosUsuario[0].user,
+              dadosUsuario[0]._nome,
+              dadosUsuario[0]._telefone,
+              dadosUsuario[0]._email,
+              dadosUsuario[0]._razaoSocial,
+              dadosUsuario[0]._cnpj
+
+            );
+          }
+        } else {
+          throw new Error('Dados não encontrados');
+        }
+      }).catch((error) => {
+        throw new Error(error.message)
+      });
   }
 }
 export default Connection;

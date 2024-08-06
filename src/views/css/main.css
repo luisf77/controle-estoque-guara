@@ -68,21 +68,3 @@ footer{
         box-shadow: none;
     }
 }
-.btSair{
-    background: transparent;
-    position: absolute;
-    right: 0;
-    display: block;
-    width: 40px;
-    height: 30px;
-    text-align: center;
-    user-select: none;
-    cursor: pointer;
-    border: none;
-    text-decoration: underline;
-}
-
-.btSair:hover{
-    background-color: #FF4949;
-    color: white;
-}
