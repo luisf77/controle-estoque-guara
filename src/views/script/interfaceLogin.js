@@ -42,9 +42,11 @@ formLogin.botaoLogin().addEventListener('click', async () => {
 
     try {
         // nesta parte a variavel message recebe a resposta assincrona do firebase tratada
+        if (validate_email(formLogin.email().value)){
         const message = await connection.login(formLogin.email().value, formLogin.senha().value);
         console.log(message);
         window.location.href = "home.html";
+        }
     } catch (error) {
         displayFeedback(error.message, true);
     }
