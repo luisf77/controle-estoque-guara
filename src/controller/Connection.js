@@ -112,7 +112,7 @@ class Connection {
           //console.log('existe')
           //console.log(dadosUsuario[0]._tipo)
           if (dadosUsuario[0]._tipo == 'pessoaFisica') {
-            console.log('atendeu aos parametros de montagem do objeto')
+            //console.log('atendeu aos parametros de montagem do objeto')
             return new PessoaFisica(
               dadosUsuario[0]._tipo,
               dadosUsuario[0].user,
