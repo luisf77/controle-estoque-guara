@@ -100,14 +100,13 @@ formLogin.botaoCadastrar().addEventListener('click', async () => {
                     formCadastro.telefone().value,
                     radioId
                 );
+                formCadastro.formCad().reset();
+                closeModal();
                 displayFeedback(message);
-            }
-
-            formCadastro.formCad().reset();
-            closeModal();
-        } else {
-            throw new Error('senha de confirmação está diferente!');
+            }else {
+            throw new Error('Senha de confirmação está diferente!');
         }
+    }
     }catch (error) {
     alert(error.message);
 }
