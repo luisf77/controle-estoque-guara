@@ -36,15 +36,6 @@ formLogin.botaoFecharCadastro().addEventListener('click', (e) => {
     closeModal();
 });
 const connection = new Connection();
-/*
-window.onload = function () {
-    connection.auth.onAuthStateChanged(user => {
-        if (user) {
-            window.location.href = 'home.html';
-        }
-    });
-
-}*/
 
 //Evento do botão login
 formLogin.botaoLogin().addEventListener('click', async () => {
@@ -109,7 +100,7 @@ formLogin.botaoCadastrar().addEventListener('click', async () => {
                     formCadastro.telefone().value,
                     radioId
                 );
-                console.log(message);
+                displayFeedback(message);
             }
 
             formCadastro.formCad().reset();
