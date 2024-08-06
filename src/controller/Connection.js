@@ -1,3 +1,4 @@
+import { PessoaFisica, PessoaJuridica } from "/src/models/Usuario.js";
 class Connection {
   constructor() {
     this.firebaseConfig = {
@@ -54,7 +55,7 @@ class Connection {
     });
   }
 
-  register(email, password) {
+  register(email, password, nome, sNomeRazaoSocial, cpfCnpj, telefone, pJuridicaFisica) {
     // Cria um novo usuário no Firebase com o email e senha fornecidos
     return this.auth.createUserWithEmailAndPassword(email, password).then(userCredential => {
       const user = userCredential.user;
@@ -63,11 +64,38 @@ class Connection {
         registration_time: new Date().toString()
       };
       this.database.ref('users/' + user.uid).set(user_data);
-      return 'Usuario Criado';
+      return this.registerDataUser(user.uid, nome, sNomeRazaoSocial, cpfCnpj, telefone, email, pJuridicaFisica);
 
     }).catch(error => {
       throw new Error(error.message);
     });
+  }
+
+  registerDataUser(user, nome, sNomeRazaoSocial, cpfCnpj, telefone, email, pJuridicaFisica) {
+    if (pJuridicaFisica == 'pessoaFisica') {
+      const pessoaFisica = new PessoaFisica(pJuridicaFisica, user, nome, telefone, email, sNomeRazaoSocial, cpfCnpj);
+      console.log('entrou no if')
+      return firebase.firestore()
+        .collection('users')
+        .add(JSON.parse(JSON.stringify(pessoaFisica))) //tira os gets e set para simplificar o objeto e mandar para o firestore
+        .then(() => {
+          return 'Dados salvos com sucesso!';
+        }).catch((error) => {
+          throw new Error(error.message);
+        });
+    } else {
+      console.log('entrou no else')
+      const pessoaJuridica = new PessoaJuridica(pJuridicaFisica, user, nome, telefone, email, sNomeRazaoSocial, cpfCnpj);
+      
+      return firebase.firestore()
+        .collection('users')
+        .add(JSON.parse(JSON.stringify(pessoaJuridica))) //tira os gets e set para simplificar o objeto e mandar para o firestore
+        .then(() => {
+          return 'Dados salvos com sucesso!';
+        }).catch((error) => {
+          throw new Error(error.message);
+        });
+    }
   }
 }
 export default Connection;

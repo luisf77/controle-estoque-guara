@@ -34,21 +34,29 @@
         <div>
 
         </div>
-        <div class="modal" id="modal">
+        <div class="-modal" id="modal">
             <div class="modal-content">
                 <header class="modal-header">
                     <h2 class="titulo">Cadastro de Usuário</h2>
                     <span class="modal-close" id="modalClose">&#10006;</span>
                 </header>
                 <form class="modal-form" id="formularioCadastro">
+                    <div class='btUser'>
+                        <input type="radio"  name="usuario" id="pessoaFisica" checked>
+                        <label for="pessoaFisica">Pessoa Fisica</label>
+                        
+                        <input type="radio"  name="usuario" id="pessoaJuridica">
+                        <label for="pessoaJuridica">Pessoa Jurídica</label>
+                    </div>
                     <input type="text" class="modal-field" id="nome" placeholder="Nome" required>
-                    <input type="text" class="modal-field" id="sobrenome" placeholder="Sobrenome" required>
+                    <input type="text" class="modal-field" id="sNomeRazaoSocial" placeholder="Sobrenome" required>
                     <input type="text" class="modal-field" id="cpfCnpj" placeholder="Cpf/Cnpj" required>
                     <input type="text" class="modal-field" id="Teleone" placeholder="Telefone" required>
                     <input type="text" class="modal-field" id="emailCad" placeholder="Email" required>
                     <input type="password" class="modal-field" id="passwordCad" placeholder="Senha" required>
-                    <input type="password" class="modal-field" id="passwordConfirm" placeholder="Confirmar Senha" required>
-                    <footer >
+                    <input type="password" class="modal-field" id="passwordConfirm" placeholder="Confirmar Senha"
+                        required>
+                    <footer>
                         <button type="button" class="solid" id="registerButton">Cadastre-se</button>
                     </footer>
                 </form>
@@ -61,6 +69,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script type="module" src="/src/views/script/interfaceLogin.js"></script>
 </body>
 

@@ -1,9 +1,21 @@
 class Usuario{
-    constructor(nome,telefone,email){
+    constructor(tipo,user,nome,telefone,email){
+        this._tipo = tipo
+        this.user ={
+            uid: user
+        };
         this._nome = nome;
         this._telefone = telefone;
         this._email = email;
     }
+
+    get tipo(){
+        return this._tipo;
+    }
+    set tipo(novoTipo){
+        this._tipo = novoTipo;
+    }
+
     get nome(){
         return this._nome;
     }
@@ -26,8 +38,8 @@ class Usuario{
     }
 }
 class PessoaFisica extends Usuario{
-    constructor(nome,telefone,email,sobrenome,cpf){
-        super(nome,telefone,email);
+    constructor(tipo,user,nome,telefone,email,sobrenome,cpf){
+        super(tipo,user,nome,telefone,email);
         this._sobrenome = sobrenome;
         this._cpf = cpf;
     }
@@ -45,8 +57,8 @@ class PessoaFisica extends Usuario{
     }
 }
 class PessoaJuridica extends Usuario{
-    constructor(nome,telefone,email,razaoSocial,cnpj){
-        super(nome,telefone,email);
+    constructor(tipo,user,nome,telefone,email,razaoSocial,cnpj){
+        super(tipo,user,nome,telefone,email);
         this._razaoSocial = razaoSocial;
         this._cnpj = cnpj;
     }
@@ -64,3 +76,4 @@ class PessoaJuridica extends Usuario{
         this._cnpj = novoCnpj;
     }
 }
+export {PessoaFisica,PessoaJuridica};

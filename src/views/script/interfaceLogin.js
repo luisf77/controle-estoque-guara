@@ -10,11 +10,17 @@ const formLogin = {
     botaoRecuperarSenha: () => document.getElementById('recoverPassword'),
     feedbackContainer: () => document.getElementById('feedback')
 }
+//coleção de itens do formulário de cadastro
 const formCadastro = {
+    pJuridicaFisica: () => document.getElementsByName('usuario'),
+    nome: () => document.getElementById('nome'),
+    sNomeRazaoSocial: () => document.getElementById('sNomeRazaoSocial'),
+    cpfCnpj: () => document.getElementById('cpfCnpj'),
+    telefone: () => document.getElementById('Teleone'),
     email: () => document.getElementById('emailCad'),
     senha: () => document.getElementById('passwordCad'),
     senhaConfirm: () => document.getElementById('passwordConfirm'),
-    formCad: () => document.getElementById('formularioCadastro')
+    formCad: () => document.getElementById('formularioCadastro'),
 }
 
 const openModal = () => document.getElementById('modal')
@@ -30,15 +36,16 @@ formLogin.botaoFecharCadastro().addEventListener('click', (e) => {
     closeModal();
 });
 const connection = new Connection();
-window.onload = function(){
-    connection.auth.onAuthStateChanged(user=>{
-        if(user){
-            window.location.href= 'home.html';
+/*
+window.onload = function () {
+    connection.auth.onAuthStateChanged(user => {
+        if (user) {
+            window.location.href = 'home.html';
         }
-});
+    });
 
-    
-}
+}*/
+
 //Evento do botão login
 formLogin.botaoLogin().addEventListener('click', async () => {
 
@@ -54,7 +61,7 @@ formLogin.botaoLogin().addEventListener('click', async () => {
 //Evento do botão Recuperar Senha
 formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
     const email = prompt('Digite seu Email de recuperação:', formLogin.email().value);
-    if (email != null && email!='') {
+    if (email != null && email != '') {
         try {
             if (validate_email(email)) {
                 // nesta parte a variavel message recebe a resposta assincrona do firebase tratada
@@ -66,22 +73,53 @@ formLogin.botaoRecuperarSenha().addEventListener('click', async () => {
         }
     }
 });
+
+//adiciona um evento as opções de tipo de usuario q ao serem clicadas mudam o placeholder
+document.addEventListener('DOMContentLoaded', () => {
+    const updatePlaceholders = (event) => {
+        const tipoUser = event.target.id;
+        if (tipoUser === 'pessoaFisica') {
+            formCadastro.cpfCnpj().placeholder = 'CPF';
+            formCadastro.sNomeRazaoSocial().placeholder = "Sobrenome";
+        } else if (tipoUser === 'pessoaJuridica') {
+            formCadastro.cpfCnpj().placeholder = 'CNPJ';
+            formCadastro.sNomeRazaoSocial().placeholder = "Razão Social";
+        }
+    };
+
+    // Adiciona o event listener a cada botão de rádio
+    Array.from(formCadastro.pJuridicaFisica()).forEach((radio) => {
+        radio.addEventListener('click', updatePlaceholders);
+    });
+});
+
 //Evento do cadastro
 formLogin.botaoCadastrar().addEventListener('click', async () => {
     try {
         if (validate_email(formCadastro.email().value) && validate_password(formCadastro.senha().value)) {
             if (formCadastro.senha().value == formCadastro.senhaConfirm().value) {
-                const message = await connection.register(formCadastro.email().value, formCadastro.senha().value);
-                alert(message);
-                formCadastro.formCad().reset();
-                closeModal();
-            } else {
-                throw new Error('senha de confirmação está diferente!');
+                const selectedRadio = document.querySelector('input[name="usuario"]:checked');
+                const radioId = selectedRadio ? selectedRadio.id : null;
+                const message = await connection.register(
+                    formCadastro.email().value,
+                    formCadastro.senha().value,
+                    formCadastro.nome().value,
+                    formCadastro.sNomeRazaoSocial().value,
+                    formCadastro.cpfCnpj().value,
+                    formCadastro.telefone().value,
+                    radioId
+                );
+                console.log(message);
             }
+
+            formCadastro.formCad().reset();
+            closeModal();
+        } else {
+            throw new Error('senha de confirmação está diferente!');
         }
-    } catch (error) {
-        alert(error.message);
-    }
+    }catch (error) {
+    alert(error.message);
+}
 });
 
 
